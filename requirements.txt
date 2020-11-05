@@ -29,3 +29,4 @@ boto3==1.9.39
 Werkzeug==0.11.15
 marshmallow==2.20.0
 marshmallow-sqlalchemy==0.15.0
+psycopg2-binary==2.8.6

@@ -660,6 +660,13 @@ class Submissions(db.Model):
             return self.user_id
 
     @hybrid_property
+    def image(self):
+        solve = Solves.query.filter_by(id=self.id).first_or_404()
+        if solve:
+            return solve.submission_image
+        return ''
+
+    @hybrid_property
     def account(self):
         user_mode = get_config('user_mode')
         if user_mode == 'teams':

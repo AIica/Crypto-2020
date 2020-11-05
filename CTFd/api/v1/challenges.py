@@ -238,6 +238,7 @@ class ChallengeAttempt(Resource):
 
         challenge_id = request_data.get('challenge_id')
 
+
         if current_user.is_admin():
             preview = request.args.get('preview', False)
             if preview:

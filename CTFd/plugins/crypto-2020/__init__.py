@@ -90,4 +90,4 @@ def load(app):
                 response.append(challenge)
 
         db.session.close()
-        return {"success": True, "data": response}
+        return jsonify({"success": True, "data": response})

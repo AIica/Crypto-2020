@@ -196,9 +196,13 @@ class TeamSolves(Resource):
                 abort(404)
             team = Teams.query.filter_by(id=team_id).first_or_404()
 
-        solves = team.get_solves(
-            admin=is_admin()
-        )
+        solves = []
+
+        if team:
+            solves = team.get_solves(
+                admin=is_admin()
+            )
+
 
         view = 'admin' if is_admin() else 'user'
         schema = SubmissionSchema(view=view, many=True)

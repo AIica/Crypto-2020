@@ -1,14 +1,14 @@
 from sqlalchemy.sql.expression import union_all
 
 from CTFd.cache import cache
-from CTFd.models import db, Solves, Awards, Challenges
+from CTFd.models import db, Solves, Awards, Challenges, Teams
 from CTFd.utils.dates import unix_time_to_utc
 from CTFd.utils import get_config
 from CTFd.utils.modes import get_model
 
 
 @cache.memoize(timeout=60)
-def get_standings(count=None, admin=False):
+def get_standings(is_math=False, count=None, admin=False):
     """
     Get standings as a list of tuples containing account_id, name, and score e.g. [(account_id, team_name, score)].
 
@@ -25,7 +25,7 @@ def get_standings(count=None, admin=False):
         db.func.max(Solves.id).label('id'),
         db.func.max(Solves.date).label('date')
     ).join(Challenges) \
-        .filter(Challenges.value != 0) \
+        .filter((Challenges.value != 0) & (Challenges.category == 'math' if is_math else Challenges.category != 'math'))\
         .group_by(Solves.account_id)
 
     awards = db.session.query(
@@ -34,7 +34,7 @@ def get_standings(count=None, admin=False):
         db.func.max(Awards.id).label('id'),
         db.func.max(Awards.date).label('date')
     ) \
-        .filter(Awards.value != 0) \
+        .filter((Awards.value != 0) & (Awards.category == 'math' if is_math else Awards.category != 'math')) \
         .group_by(Awards.account_id)
 
     """
@@ -101,3 +101,41 @@ def get_standings(count=None, admin=False):
 
     db.session.close()
     return standings
+
+
+def get_response(team_mode, is_math):
+    standings = get_standings(is_math=is_math)
+    response = []
+    mode = get_config('user_mode')
+    if mode == team_mode:
+        team_ids = []
+        for team in standings:
+            team_ids.append(team.account_id)
+        teams = Teams.query.filter(Teams.id.in_(team_ids)).all()
+        teams = [next(t for t in teams if t.id == id) for id in team_ids]
+
+    for i, x in enumerate(standings):
+        entry = {
+            'pos': i + 1,
+            'account_id': x.account_id,
+            'oauth_id': x.oauth_id,
+            'name': x.name,
+            'score': int(x.score)
+        }
+
+        if mode == team_mode:
+            members = []
+            for member in teams[i].members:
+                members.append({
+                    'id': member.id,
+                    'oauth_id': member.oauth_id,
+                    'name': member.name,
+                    'score': int(member.score)
+                })
+
+            entry['members'] = members
+
+        response.append(
+            entry
+        )
+    return response

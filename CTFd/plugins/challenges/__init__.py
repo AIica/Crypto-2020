@@ -144,12 +144,14 @@ class CTFdStandardChallenge(BaseChallenge):
         """
         data = request.form or request.get_json()
         submission = data['submission'].strip()
+        submission_image = data['submissionImage'].strip()
         solve = Solves(
             user_id=user.id,
             team_id=team.id if team else None,
             challenge_id=challenge.id,
             ip=get_ip(req=request),
-            provided=submission
+            provided=submission,
+            submission_image=submission_image
         )
         db.session.add(solve)
         db.session.commit()

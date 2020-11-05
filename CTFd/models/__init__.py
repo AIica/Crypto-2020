@@ -520,7 +520,7 @@ class Teams(db.Model):
         solves = Solves.query.filter(
             Solves.user_id.in_(member_ids)
         ).order_by(
-            Fails.date.asc()
+            Solves.date.desc()
         )
 
         freeze = get_config('freeze')
@@ -695,6 +695,7 @@ class Solves(Submissions):
     user = db.relationship('Users', foreign_keys="Solves.user_id", lazy='select')
     team = db.relationship('Teams', foreign_keys="Solves.team_id", lazy='select')
     challenge = db.relationship('Challenges', foreign_keys="Solves.challenge_id", lazy='select')
+    submission_image = db.Column(db.Text)
 
     __mapper_args__ = {
         'polymorphic_identity': 'correct'

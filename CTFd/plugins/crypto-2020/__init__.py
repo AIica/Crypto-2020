@@ -1,13 +1,17 @@
+import datetime
+
 from flask import send_file, jsonify
 from flask.helpers import safe_join
+from sqlalchemy.sql import and_
+
 from CTFd.models import Challenges, Solves, Pages, db
 from CTFd.schemas.pages import PageSchema
 from CTFd.utils import get_config
-from CTFd.utils.modes import get_model
 from CTFd.utils.dates import ctf_ended, ctf_started
-from CTFd.utils.user import is_verified, is_admin
 from CTFd.utils.decorators import during_ctf_time_only
-from sqlalchemy.sql import and_
+from CTFd.utils.modes import get_model
+from CTFd.utils.user import is_verified, is_admin
+
 
 def load(app):
     @app.route("/OneSignalSDKWorker.js", methods=["GET"])
@@ -17,8 +21,8 @@ def load(app):
 
     @app.route("/api/v1/dates", methods=["GET"])
     def dates():
-        start = get_config('start')
-        end = get_config('end')
+        start = datetime.datetime.fromtimestamp(get_config('start')).isoformat()
+        end = datetime.datetime.fromtimestamp(get_config('end')).isoformat()
         is_started = ctf_started()
         is_ended = ctf_ended()
 

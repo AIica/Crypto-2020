@@ -8,7 +8,7 @@ from CTFd.utils.modes import get_model
 
 
 @cache.memoize(timeout=60)
-def get_standings(is_math=False, count=None, admin=False):
+def get_standings(is_test=False, count=None, admin=False):
     """
     Get standings as a list of tuples containing account_id, name, and score e.g. [(account_id, team_name, score)].
 
@@ -25,7 +25,7 @@ def get_standings(is_math=False, count=None, admin=False):
         db.func.max(Solves.id).label('id'),
         db.func.max(Solves.date).label('date')
     ).join(Challenges) \
-        .filter((Challenges.value != 0) & (Challenges.category == 'math' if is_math else Challenges.category != 'math'))\
+        .filter((Challenges.value != 0) & (Challenges.category == 'test' if is_test else Challenges.category != 'test'))\
         .group_by(Solves.account_id)
 
     awards = db.session.query(
@@ -34,7 +34,7 @@ def get_standings(is_math=False, count=None, admin=False):
         db.func.max(Awards.id).label('id'),
         db.func.max(Awards.date).label('date')
     ) \
-        .filter((Awards.value != 0) & (Awards.category == 'math' if is_math else Awards.category != 'math')) \
+        .filter((Awards.value != 0) & (Awards.category == 'test' if is_test else Awards.category != 'test')) \
         .group_by(Awards.account_id)
 
     """
@@ -103,8 +103,8 @@ def get_standings(is_math=False, count=None, admin=False):
     return standings
 
 
-def get_response(team_mode, is_math):
-    standings = get_standings(is_math=is_math)
+def get_response(team_mode, is_test):
+    standings = get_standings(is_test=is_test)
     response = []
     mode = get_config('user_mode')
     if mode == team_mode:

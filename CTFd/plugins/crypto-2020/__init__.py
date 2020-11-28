@@ -21,8 +21,8 @@ def load(app):
 
     @app.route("/api/v1/dates", methods=["GET"])
     def dates():
-        start = datetime.datetime.fromtimestamp(get_config('start')).isoformat()
-        end = datetime.datetime.fromtimestamp(get_config('end')).isoformat()
+        start = datetime.datetime.fromtimestamp(get_config('start') or 0).isoformat()
+        end = datetime.datetime.fromtimestamp(get_config('end') or 0).isoformat()
         is_started = ctf_started()
         is_ended = ctf_ended()
 

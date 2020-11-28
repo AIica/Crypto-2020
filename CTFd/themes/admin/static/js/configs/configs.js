@@ -12,6 +12,7 @@ var months = {
     'November': 11,
     'December': 12,
 };
+moment().tz("Europe/Minsk").format();
 
 function load_timestamp(place, timestamp) {
     if (typeof timestamp == "string") {
@@ -92,6 +93,7 @@ function update_configs(obj){
             params[x] = obj[x];
         }
     });
+    console.log(params);
 
     fetch(script_root + target, {
         method: method,
@@ -104,7 +106,7 @@ function update_configs(obj){
     }).then(function(response) {
         return response.json()
     }).then(function(data) {
-        window.location.reload();
+        // window.location.reload();
     });
 }
 

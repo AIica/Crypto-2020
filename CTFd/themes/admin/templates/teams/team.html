@@ -145,7 +145,6 @@
 						<td class="text-center"><b>Submitted</b></td>
 						<td class="text-center"><b>Category</b></td>
 						<td class="text-center"><b>Value</b></td>
-						<td class="text-center"><b>Image</b></td>
 						<td class="text-center"><b>Time</b></td>
 						<td class="text-center"><b>Delete</b></td>
 					</tr>
@@ -157,7 +156,6 @@
 							<td class="flag" id="{{ solve.id }}"><pre>{{ solve.provided }}</pre></td>
 							<td class="text-center">{{ solve.challenge.category }}</td>
 							<td class="text-center">{{ solve.challenge.value }}</td>
-							<td class="text-center"><img src="{{ solve.image }}" width="150" height="50"/></td>
 							<td class="text-center solve-time">
 								<script>document.write(moment("{{ solve.date|isoformat }}").local().format('MMMM Do, h:mm:ss A'))</script>
 							</td>

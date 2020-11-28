@@ -15,12 +15,12 @@ class ScoreboardList(Resource):
     @check_account_visibility
     @check_score_visibility
     def get(self):
-        math_response = get_response(TEAMS_MODE, is_math=True)
-        response = get_response(TEAMS_MODE, is_math=False)
+        test_response = get_response(TEAMS_MODE, is_test=True)
+        response = get_response(TEAMS_MODE, is_test=False)
         return {
             'success': True,
             'data': {
-                'math': math_response,
+                'test': test_response,
                 'ctf': response
             }
         }

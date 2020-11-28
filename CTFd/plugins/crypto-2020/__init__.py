@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 from flask import send_file, jsonify
 from flask.helpers import safe_join
@@ -21,8 +22,9 @@ def load(app):
 
     @app.route("/api/v1/dates", methods=["GET"])
     def dates():
-        start = datetime.datetime.fromtimestamp(get_config('start')).isoformat()
-        end = datetime.datetime.fromtimestamp(get_config('end')).isoformat()
+        timezone = pytz.timezone('Europe/Minsk')
+        start = datetime.datetime.fromtimestamp(get_config('start') or 0).astimezone(timezone)
+        end = datetime.datetime.fromtimestamp(get_config('end') or 0).astimezone(timezone)
         is_started = ctf_started()
         is_ended = ctf_ended()
 

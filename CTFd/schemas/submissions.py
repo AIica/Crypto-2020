@@ -23,8 +23,7 @@ class SubmissionSchema(ma.ModelSchema):
             'team',
             'date',
             'type',
-            'id',
-            'image'
+            'id'
         ],
         'user': [
             'challenge_id',
